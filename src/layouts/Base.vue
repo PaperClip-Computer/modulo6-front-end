@@ -1,12 +1,11 @@
 <template>
-  <main class="min-h-screen font-roboto">
+  <section>
     <router-view></router-view>
-  </main>
+  </section>
 </template>
 
 <script lang="ts">
   import { defineComponent } from 'vue';
+
   export default defineComponent({});
 </script>
-
-<style></style>
