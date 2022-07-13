@@ -1,0 +1,19 @@
+{
+  "name": "Modulo6-Frontend",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/node/app",
+  "shutdownAction": "stopCompose",
+  "postStartCommand": ".devcontainer/entrypoint.sh",
+  "extensions": [
+    "naumovs.color-highlight",
+    "editorconfig.editorconfig",
+    "mhutchie.git-graph",
+    "yzhang.markdown-all-in-one",
+    "kohler.path-intellisense",
+    "esbenp.prettier-vscode",
+    "redhat.vscode-yaml",
+    "vue.volar",
+    "bradlc.vscode-tailwindcss"
+  ]
+}
