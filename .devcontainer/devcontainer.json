@@ -14,6 +14,7 @@
     "esbenp.prettier-vscode",
     "redhat.vscode-yaml",
     "vue.volar",
-    "bradlc.vscode-tailwindcss"
+    "bradlc.vscode-tailwindcss",
+    "znck.vue"
   ]
 }
