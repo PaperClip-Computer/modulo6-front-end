@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="w-full h-full flex flex-col grow">
     <router-view></router-view>
   </section>
 </template>

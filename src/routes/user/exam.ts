@@ -6,17 +6,17 @@ import UserExamResult from '@/pages/user/exam/Result.vue';
 
 export default [
   {
-    path: '/',
+    path: '',
     component: UserExamInfo,
     name: 'user.exam.info',
   },
   {
-    path: '/register',
+    path: 'register',
     component: UserExamRegister,
     name: 'user.exam.register',
   },
   {
-    path: '/result',
+    path: 'result',
     component: UserExamResult,
     name: 'user.exam.result',
   },

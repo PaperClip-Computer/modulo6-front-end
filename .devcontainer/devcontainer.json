@@ -16,6 +16,7 @@
     "vue.volar",
     "bradlc.vscode-tailwindcss",
     "znck.vue",
-    "ms-vsliveshare.vsliveshare"
+    "ms-vsliveshare.vsliveshare",
+    "jock.svg"
   ]
 }

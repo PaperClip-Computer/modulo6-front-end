@@ -12,7 +12,7 @@ export default [
     children: [...userRoutes],
   },
   {
-    path: '/doctor/:id',
+    path: '/doctor/:doctorId',
     component: BaseLayout,
     children: [...doctorRoutes],
   },

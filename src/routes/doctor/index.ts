@@ -14,24 +14,24 @@ export default [
     component: DoctorHome,
   },
   {
-    path: '/search',
+    path: 'search',
     name: 'doctor.search',
     component: DoctorSearch,
   },
   {
-    path: '/exam/:examId',
+    path: 'exam/:examId',
     name: 'doctor.exam.info',
     component: DoctorExamInfo,
     children: [
       {
-        path: '/order',
+        path: 'order',
         name: 'doctor.exam.info.order',
         component: DoctorOrder,
       },
     ],
   },
   {
-    path: '/pacient/:id',
+    path: 'pacient/:id',
     name: 'doctor.pacient.info',
     component: DoctorPacientLayout,
     children: [...DoctorPacientRoutes],

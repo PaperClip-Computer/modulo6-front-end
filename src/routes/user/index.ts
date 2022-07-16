@@ -11,7 +11,7 @@ import UserSearch from '@/pages/user/Search.vue';
 
 export default [
   {
-    path: '/',
+    path: '',
     component: UserHome,
     name: 'user.home',
   },
