@@ -1,11 +1,10 @@
 import { RouteRecordRaw } from 'vue-router';
+import DoctorExamRoutes from './exam';
 import DoctorPacientRoutes from './pacient';
 
-import DoctorPacientLayout from '@/layouts/Base.vue';
+import DoctorBaseLayout from '@/layouts/Base.vue';
 import DoctorHome from '@/pages/doctor/Home.vue';
 import DoctorSearch from '@/pages/doctor/Search.vue';
-import DoctorExamInfo from '@/pages/doctor/exam/Info.vue';
-import DoctorOrder from '@/pages/doctor/exam/Order.vue';
 
 export default [
   {
@@ -20,20 +19,13 @@ export default [
   },
   {
     path: 'exam/:examId',
-    name: 'doctor.exam.info',
-    component: DoctorExamInfo,
-    children: [
-      {
-        path: 'order',
-        name: 'doctor.exam.info.order',
-        component: DoctorOrder,
-      },
-    ],
+    component: DoctorBaseLayout,
+    children: [...DoctorExamRoutes],
   },
   {
     path: 'pacient/:id',
     name: 'doctor.pacient.info',
-    component: DoctorPacientLayout,
+    component: DoctorBaseLayout,
     children: [...DoctorPacientRoutes],
   },
 ] as RouteRecordRaw[];

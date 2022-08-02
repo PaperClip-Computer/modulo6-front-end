@@ -1,7 +1,74 @@
-<template></template>
+<template>
+  <div class="flex flex-col">
+    <HeaderVue :has-go-back="true" />
+    <div class="flex flex-col p-3 border border-our-grey-medium-medium">
+      <span class="text-our-grey-kinda-dark font-medium text-3xl">Nome do Exame</span>
+    </div>
+    <div class="p-5 flex flex-col gap-y-2">
+      <div v-for="info in infoList">
+        <PillItemVue
+          :name="info.name"
+          :value="info.value"
+          :justify="info.name === 'Interpretação'"
+        />
+      </div>
+    </div>
+    <FilledButtonVue class="m-5" text="Pedir Exame" @click.prevent="handleOrderExam()" />
+  </div>
+</template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
+import { defineComponent } from 'vue';
+import FilledButtonVue from '../../../components/buttons/FilledButton.vue';
+import HeaderVue from '../../../components/header/Header.vue';
+import PillItemVue from '../../../components/pillItem/PillItem.vue';
 
-  export default defineComponent({});
+interface ExamInfo {
+  name: string;
+  value?: string;
+}
+
+export default defineComponent({
+  components: {
+    HeaderVue,
+    PillItemVue,
+    FilledButtonVue,
+  },
+  data() {
+    const infoList: ExamInfo[] = [
+      {
+        name: 'Sinonímia',
+      },
+      {
+        name: 'Preparo do Paciente',
+        value: 'Jejum de 4 horas',
+      },
+      {
+        name: 'Material',
+        value: 'Soro. Volume mínimo: 1,0 mL',
+      },
+      {
+        name: 'Colheita / Conservação',
+        value: 'Se o exame não for realizado no mesmo dia, congelar a amostra',
+      },
+      { name: 'Método', value: 'Radioimunoensaio' },
+      { name: 'Valores Normais', value: '2 a 30 ngdL' },
+      {
+        name: 'Interpretação',
+        value:
+          'A tiroglobulina é uma glicoproteína produzida pelas células acinares tiroidianas sendo o principal componente do colóide dos folículos tiroidianos. Os seus níveis séricos variam com o estado funcional da tiróide, estando elevados nas tireoidites, carcinomas de tiróide, hipertiroidismo ou mesmo ap6s palpação vigorosa dessa glândula. Sua principal utilidade é no seguimento de carcinomas operados da tiróide, especialmente dos tipos papilífero, folicular e misto papilífero-folicutar.',
+      },
+    ];
+
+    return { infoList };
+  },
+  methods: {
+    handleOrderExam() {
+      console.log('Pedir exame');
+      this.$router.push({
+        name: 'doctor.exam.info.order',
+      });
+    },
+  },
+});
 </script>

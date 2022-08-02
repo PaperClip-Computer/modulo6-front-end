@@ -1,4 +1,7 @@
 export interface TabData {
-  iconName: string;
-  title: string;
+  iconName: TabIconName;
+  title: TabTitle;
 }
+
+export type TabTitle = 'Procurar' | 'Histórico' | 'Meu Doutor' | 'Gráfico';
+export type TabIconName = 'search' | 'restore' | 'stethoscope' | 'graph';

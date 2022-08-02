@@ -5,9 +5,8 @@ import userExamRoutes from './exam';
 import UserExamLayout from '@/layouts/Base.vue';
 import UserDoctor from '@/pages/user/Doctor.vue';
 import UserGraph from '@/pages/user/Graph.vue';
-import UserHistory from '@/pages/user/History.vue';
 import UserHome from '@/pages/user/Home.vue';
-import UserSearch from '@/pages/user/Search.vue';
+import { UserRouteMeta } from '../../types/user';
 
 export default [
   {
@@ -17,13 +16,20 @@ export default [
   },
   {
     path: 'search',
-    component: UserSearch,
+    component: UserHome,
     name: 'user.search',
+    meta: {
+      hasSearch: true,
+    } as UserRouteMeta,
   },
   {
     path: 'history',
-    component: UserHistory,
+    component: UserHome,
     name: 'user.history',
+    meta: {
+      hasSearch: true,
+      noPending: true,
+    } as UserRouteMeta,
   },
   {
     path: 'my-doctor',
