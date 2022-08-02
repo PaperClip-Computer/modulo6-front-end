@@ -5,13 +5,14 @@
     :title="title"
     v-model:examSortOrder="examSortOrder"
   >
-    <div v-for="(examItem, i) in orderedAndFilteredExamList" :key="i" class="px-3 py-2">
-      <ListItem
-        :text="examItem.examName"
-        :isPending="examItem.isPending"
-        @click="handleClickExam(examItem)"
-        class="hover:cursor-pointer"
-      />
+    <div
+      v-for="(examItem, i) in orderedAndFilteredExamList"
+      :key="i"
+      class="px-3 py-2 flex flex-col"
+    >
+      <button @click="handleClickExam(examItem)">
+        <ListItem :text="examItem.examName" :isPending="examItem.isPending" />
+      </button>
       <span class="ml-4">{{ formatDate(examItem.date) }}</span>
     </div>
   </Base>
