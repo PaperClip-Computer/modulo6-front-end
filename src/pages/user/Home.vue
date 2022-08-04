@@ -1,10 +1,5 @@
 <template>
-  <Base
-    :headerOptions="headerOptions"
-    :hasSearchBar="hasSearchBar"
-    :title="title"
-    v-model:examSortOrder="examSortOrder"
-  >
+  <Base :headerOptions="headerOptions" :title="title" v-model:examSortOrder="examSortOrder">
     <div
       v-for="(examItem, i) in orderedAndFilteredExamList"
       :key="i"
@@ -122,7 +117,12 @@ export default defineComponent({
         return;
       }
 
-      console.log('go to somewhere');
+      this.$router.push({
+        name: 'user.exam.info',
+        params: {
+          examId: '1',
+        },
+      });
     },
     formatDate(date: string | Date) {
       if (typeof date == 'string') {

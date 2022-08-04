@@ -1,27 +1,23 @@
 <template>
   <div class="flex flex-col">
-    <HeaderVue :has-go-back="true" />
+    <Header :has-go-back="true" />
     <div class="flex flex-col p-3 border border-our-grey-medium-medium">
       <span class="text-our-grey-kinda-dark font-medium text-3xl">Nome do Exame</span>
     </div>
     <div class="p-5 flex flex-col gap-y-2">
       <div v-for="info in infoList">
-        <PillItemVue
-          :name="info.name"
-          :value="info.value"
-          :justify="info.name === 'Interpretação'"
-        />
+        <PillItem :name="info.name" :value="info.value" :justify="info.name === 'Interpretação'" />
       </div>
     </div>
-    <FilledButtonVue class="m-5" text="Pedir Exame" @click.prevent="handleOrderExam()" />
+    <FilledButton class="m-5" text="Pedir Exame" @click.prevent="handleOrderExam()" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import FilledButtonVue from '../../../components/buttons/FilledButton.vue';
-import HeaderVue from '../../../components/header/Header.vue';
-import PillItemVue from '../../../components/pillItem/PillItem.vue';
+import FilledButton from '../../../components/buttons/FilledButton.vue';
+import Header from '../../../components/header/Header.vue';
+import PillItem from '../../../components/pillItem/PillItem.vue';
 
 interface ExamInfo {
   name: string;
@@ -30,9 +26,9 @@ interface ExamInfo {
 
 export default defineComponent({
   components: {
-    HeaderVue,
-    PillItemVue,
-    FilledButtonVue,
+    Header,
+    PillItem,
+    FilledButton,
   },
   data() {
     const infoList: ExamInfo[] = [

@@ -24,7 +24,6 @@ export default [
   },
   {
     path: 'pacient/:id',
-    name: 'doctor.pacient.info',
     component: DoctorBaseLayout,
     children: [...DoctorPacientRoutes],
   },

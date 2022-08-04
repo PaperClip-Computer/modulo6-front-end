@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center rounded-lg border">
+  <div class="flex flex-col items-center justify-center rounded-xl shadow-md">
     <div
       class="bg-our-red-light rounded-t-lg flex justify-center p-2 w-full text-white text-2xl font-medium"
       :class="{
@@ -10,7 +10,7 @@
       <span>{{ name }}</span>
     </div>
     <div
-      class="rounded-b-lg flex justify-center p-2 w-full text-our-grey-kinda-dark text-xl"
+      class="rounded-b-lg border border-t-0 flex justify-center p-2 w-full text-our-grey-kinda-dark text-xl"
       :class="{
         'text-center': !justify,
         'text-justify': justify,

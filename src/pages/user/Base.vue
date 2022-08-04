@@ -1,18 +1,18 @@
 <template>
   <div class="flex flex-col max-h-screen overflow-hidden">
     <Header v-bind="headerOptions" />
-    <div v-if="hasSearchBar" class="p-4 pb-0">
+    <div v-if="innerSearchValue" class="p-4 pb-0">
       <SearchBar v-model="innerSearchValue" placeholder="Palavra ou Data" />
     </div>
-    <div class="flex flex-row justify-between items-center p-5 shadow-md bg-white">
+    <div v-if="title" class="flex flex-row justify-between items-center p-5 shadow-md bg-white">
       <span class="font-roboto font-semibold text-2xl text-our-grey-kinda-dark">
         {{ title }}
       </span>
-      <button @click="changeOrder">
+      <button v-if="hasTitleButton" @click="changeOrder">
         <img :src="`/src/assets/icons/data_${examSortOrder}.svg`" alt="" />
       </button>
     </div>
-    <div class="flex flex-col py-2 overflow-y-auto">
+    <div class="flex flex-col py-2 overflow-y-auto grow">
       <slot></slot>
     </div>
   </div>
@@ -33,19 +33,16 @@ export default defineComponent({
     },
     title: {
       type: String,
-      required: true,
     },
-    hasSearchBar: {
+    hasTitleButton: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     searchValue: {
       type: String,
-      default: '',
     },
     examSortOrder: {
       type: String as PropType<ExamSortOrder>,
-      required: true,
     },
   },
   computed: {

@@ -7,10 +7,10 @@
       <span class="text-white font-bold text-3xl"> FitSys </span>
     </div>
     <div v-if="hasOptions">
-      <OptionsVue @tabClicked="handleTabClicked" />
+      <Options @tabClicked="handleTabClicked" />
     </div>
     <div v-if="Object.keys(tabData).length != 0">
-      <TabVue :iconName="tabData.iconName" :title="tabData.title" />
+      <Tab :iconName="tabData.iconName" :title="tabData.title" />
     </div>
   </header>
 </template>
@@ -19,13 +19,13 @@
 import { defineComponent, PropType } from 'vue';
 import { TabData, TabTitle } from '../../types/header';
 
-import OptionsVue from './Options.vue';
-import TabVue from './Tab.vue';
+import Options from './Options.vue';
+import Tab from './Tab.vue';
 
 export default defineComponent({
   components: {
-    OptionsVue,
-    TabVue,
+    Options,
+    Tab,
   },
   props: {
     hasGoBack: {

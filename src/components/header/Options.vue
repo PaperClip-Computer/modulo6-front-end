@@ -12,7 +12,7 @@
     >
       <div class="rounded-xl bg-white p-2 flex flex-col w-max z-10" ref="modal-content">
         <button v-for="(option, i) in options" :key="i" @click="$emit('tabClicked', option)">
-          <TabVue
+          <Tab
             :iconName="option.iconName"
             :title="option.title"
             class="w-full hover:bg-neutral-100 active:bg-neutral-300"
@@ -27,11 +27,11 @@
 import { defineComponent } from 'vue';
 import { TabData } from '../../types/header';
 
-import TabVue from './Tab.vue';
+import Tab from './Tab.vue';
 
 export default defineComponent({
   components: {
-    TabVue,
+    Tab,
   },
   emits: ['tabClicked'],
   data() {

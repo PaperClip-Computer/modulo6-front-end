@@ -2,16 +2,19 @@
   <div
     class="bg-our-grey-very-light flex flex-col items-center justify-center rounded-lg outline outline-1 outline-our-grey-medium-medium"
   >
-    <div class="flex p-4">
-      <SearchBarVue v-model="value" />
-    </div>
+    <SearchBar
+      v-model="value"
+      :placeholder="
+        buttonSelected === 'pacient' ? 'Digite o nome ou CPF' : 'Digite o nome do exame'
+      "
+    />
     <div class="flex gap-5">
-      <UnderlineButtonVue
+      <UnderlineButton
         text="Paciente"
         @click.prevent="handleSelectedButton('pacient')"
         :active="buttonSelected === 'pacient'"
       />
-      <UnderlineButtonVue
+      <UnderlineButton
         text="Exame"
         @click.prevent="handleSelectedButton('exam')"
         :active="buttonSelected === 'exam'"
@@ -22,23 +25,27 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import SearchBarVue from './SearchBar.vue';
-import UnderlineButtonVue from './UnderlineButton.vue';
+import SearchBar from './SearchBar.vue';
+import UnderlineButton from './UnderlineButton.vue';
 
 export default defineComponent({
   components: {
-    UnderlineButtonVue,
-    SearchBarVue,
+    UnderlineButton,
+    SearchBar,
   },
   props: {
     modelValue: {
       type: String,
       required: true,
     },
+    button: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
-      buttonSelected: 'pacient',
+      buttonSelected: this.button,
     };
   },
   computed: {

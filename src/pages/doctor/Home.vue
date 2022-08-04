@@ -19,15 +19,15 @@
         </div>
 
         <div class="flex flex-col gap-5">
-          <FilledButtonVue
+          <FilledButton
             class="self-stretch"
             text="Ver pacientes"
-            @click.prevent="handleLookPacients()"
+            @click.prevent="handleButton('pacient')"
           />
-          <FilledButtonVue
+          <FilledButton
             class="self-stretch"
             text="Ver exames"
-            @click.prevent="handleLookExams()"
+            @click.prevent="handleButton('exam')"
           />
         </div>
       </div>
@@ -37,11 +37,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import FilledButtonVue from '../../components/buttons/FilledButton.vue';
+import FilledButton from '../../components/buttons/FilledButton.vue';
 
 export default defineComponent({
   components: {
-    FilledButtonVue,
+    FilledButton,
   },
   data() {
     return {
@@ -52,14 +52,14 @@ export default defineComponent({
     };
   },
   methods: {
-    handleLookPacients() {
-      console.log('Ver pacientes');
+    handleButton(button: string) {
+      console.log(`Ver ${button}`);
       this.$router.push({
         name: 'doctor.search',
+        query: {
+          button: button,
+        },
       });
-    },
-    handleLookExams() {
-      console.log('Ver exames');
     },
   },
 });
