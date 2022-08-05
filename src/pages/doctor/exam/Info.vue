@@ -4,18 +4,20 @@
     <div class="flex flex-col p-3 border border-our-grey-medium-medium">
       <span class="text-our-grey-kinda-dark font-medium text-3xl">Nome do Exame</span>
     </div>
-    <div class="p-5 flex flex-col gap-y-2">
+    <div class="p-5 flex flex-col gap-4">
       <div v-for="info in infoList">
         <PillItem :name="info.name" :value="info.value" :justify="info.name === 'Interpretação'" />
       </div>
     </div>
-    <FilledButton class="m-5" text="Pedir Exame" @click.prevent="handleOrderExam()" />
+    <div class="sticky bottom-4 flex">
+      <Button class="w-full shadow-md m-5" @click.prevent="handleOrderExam()"> Pedir Exame </Button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import FilledButton from '../../../components/buttons/FilledButton.vue';
+import Button from '../../../components/buttons/Button.vue';
 import Header from '../../../components/header/Header.vue';
 import PillItem from '../../../components/pillItem/PillItem.vue';
 
@@ -28,7 +30,7 @@ export default defineComponent({
   components: {
     Header,
     PillItem,
-    FilledButton,
+    Button,
   },
   data() {
     const infoList: ExamInfo[] = [

@@ -58,7 +58,7 @@ export default defineComponent({
         },
         {
           iconName: 'graph',
-          title: 'grÁfico',
+          title: 'Gráfico',
         },
       ] as TabData[],
     };

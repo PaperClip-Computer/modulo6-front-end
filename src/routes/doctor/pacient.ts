@@ -1,15 +1,20 @@
 import { RouteRecordRaw } from 'vue-router';
 
-import DoctorPacientInfo from '@/pages/doctor/pacient/ExamInfo.vue';
-import DoctorPacientExamList from '@/pages/doctor/pacient/ExamList.vue';
-import DoctorPacientExamGraph from '@/pages/doctor/pacient/Graph.vue';
+import DoctorPacientExamGraph from '@/pages/common/Graph.vue';
+import DoctorPacientExamList from '@/pages/doctor/pacient/PacientExamList.vue';
+import DoctorPacientInfo from '@/pages/doctor/pacient/PacientInfo.vue';
 
 export default [
   {
-    path: 'exam/:examId/',
+    path: '',
     name: 'doctor.pacient.info',
     component: DoctorPacientInfo,
   },
+  // {
+  //   path: 'exam/:examId',
+  //   name: 'doctor.pacient.exam.info',
+  //   component: Common-DoctorPacientInfo,
+  // },
   {
     path: 'exam-list',
     name: 'doctor.pacient.info.exam.list',

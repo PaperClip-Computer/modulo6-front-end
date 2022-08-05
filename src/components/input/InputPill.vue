@@ -2,8 +2,9 @@
   <div class="flex flex-col items-stretch">
     <span class="font-roboto text-xl pb-2 font-semibold text-our-grey-kinda-dark">{{ title }}</span>
     <div class="flex">
-      <input
+      <Field
         :type="type"
+        :name="name"
         v-model="innerModelValue"
         class="rounded-full border-2 py-2 px-4 w-full outline-none text-our-grey-kinda-dark font-semibold"
         :class="{ 'rounded-r-none': measureUnit }"
@@ -17,13 +18,19 @@
         {{ measureUnit }}
       </span>
     </div>
+    <ErrorMessage :name="name" />
   </div>
 </template>
 
 <script lang="ts">
+import { ErrorMessage, Field } from 'vee-validate';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
+  components: {
+    Field,
+    ErrorMessage,
+  },
   props: {
     title: {
       type: String,
@@ -42,6 +49,10 @@ export default defineComponent({
     type: {
       type: String,
       default: 'text',
+    },
+    name: {
+      type: String,
+      required: true,
     },
     mask: {
       type: String,

@@ -9,7 +9,7 @@
       >
         <span class="text-2xl">Dr. André Melo</span>
         <span class="text-xl">Especialista em bla bla bla</span>
-        <span class="text-base pt-4">CRM: xxxxxxxxxx-x</span>
+        <span class="text-base pt-4 text-our-grey-kinda-dark-transparent">CRM: xxxxxxxxxx-x</span>
       </div>
     </div>
   </Base>
@@ -18,7 +18,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { HeaderOptions } from '../../types/user';
-import Base from './Base.vue';
+import Base from '../common/Base.vue';
 
 export default defineComponent({
   components: {

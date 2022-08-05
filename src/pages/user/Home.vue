@@ -1,24 +1,34 @@
 <template>
-  <Base :headerOptions="headerOptions" :title="title" v-model:examSortOrder="examSortOrder">
+  <Base
+    :headerOptions="headerOptions"
+    :title="title"
+    v-model:examSortOrder="examSortOrder"
+    v-model:searchValue="searchValue"
+    class="max-h-screen overflow-hidden"
+    innerClass="overflow-y-auto"
+  >
     <div
       v-for="(examItem, i) in orderedAndFilteredExamList"
       :key="i"
       class="px-3 py-2 flex flex-col"
     >
       <button @click="handleClickExam(examItem)">
-        <ListItem :text="examItem.examName" :isPending="examItem.isPending" />
+        <ListItem :text="examItem.name" />
       </button>
-      <span class="ml-4">{{ formatDate(examItem.date) }}</span>
+      <span class="ml-4">{{ formatDate(examItem.requestDate) }}</span>
     </div>
   </Base>
 </template>
 
 <script lang="ts">
+import { isEmpty, isNil } from 'lodash';
 import { defineComponent } from 'vue';
 import Header from '../../components/header/Header.vue';
 import ListItem from '../../components/list/ListItem.vue';
-import { ExamListItem, ExamSortOrder, HeaderOptions, UserRouteMeta } from '../../types/user';
-import Base from './Base.vue';
+import { ExamRequest } from '../../types/exam';
+import { ExamSortOrder, HeaderOptions, UserRouteMeta } from '../../types/user';
+import { createUTCDate, formatDate } from '../../utils/date';
+import Base from '../common/Base.vue';
 
 export default defineComponent({
   components: {
@@ -30,78 +40,81 @@ export default defineComponent({
     return {
       examList: [
         {
-          examName: 'Nome do Exame #1',
-          isPending: false,
-          date: '2022-05-14',
+          id: 0,
+          name: 'Tirogublina',
+          requestDate: '2022-05-10',
+          done: true,
+          unitMeasure: 'ng/dL',
         },
         {
-          examName: 'Nome do Exame #2',
-          isPending: true,
-          date: '2022-05-15',
+          id: 1,
+          name: 'T3',
+          requestDate: '2022-05-11',
+          done: true,
+          unitMeasure: 'ng/dL',
         },
         {
-          examName: 'Nome do Exame #1',
-          isPending: false,
-          date: '2022-05-14',
+          id: 2,
+          name: 'Tirogublina',
+          requestDate: '2022-05-20',
+          done: false,
+          unitMeasure: 'ng/dL',
         },
         {
-          examName: 'Nome do Exame #2',
-          isPending: true,
-          date: '2022-05-15',
+          id: 3,
+          name: 'T4',
+          requestDate: '2022-05-15',
+          done: false,
+          unitMeasure: 'ng/dL',
         },
         {
-          examName: 'Nome do Exame #1',
-          isPending: false,
-          date: '2022-05-14',
+          id: 4,
+          name: 'Colesterol',
+          requestDate: '2022-05-21',
+          done: false,
+          unitMeasure: 'ng/dL',
         },
-        {
-          examName: 'Nome do Exame #2',
-          isPending: true,
-          date: '2022-05-15',
-        },
-        {
-          examName: 'Nome do Exame #1',
-          isPending: false,
-          date: '2022-05-14',
-        },
-        {
-          examName: 'Nome do Exame #2',
-          isPending: true,
-          date: '2022-05-15',
-        },
-        {
-          examName: 'Nome do Exame #1',
-          isPending: false,
-          date: '2022-05-14',
-        },
-        {
-          examName: 'Nome do Exame #2',
-          isPending: true,
-          date: '2022-05-15',
-        },
-      ] as ExamListItem[],
+      ] as ExamRequest[],
       examSortOrder: 'desc' as ExamSortOrder,
-      searchValue: '',
+      searchValue: undefined as string | undefined,
       headerOptions: {} as HeaderOptions,
-      hasSearchBar: false,
       title: '',
     };
   },
   computed: {
+    isSearchDate() {
+      return !!this.searchValue?.match(/\d{2}\/\d{2}\/\d{4}/);
+    },
     orderedAndFilteredExamList() {
-      if ((this.$route.meta as UserRouteMeta).noPending) {
-        this.examList = this.examList.filter(exam => !exam.isPending);
-      }
+      const doneFilteredExamList = this.examList.filter(exam =>
+        (this.$route.meta as UserRouteMeta).done ? exam.done : !exam.done
+      );
 
-      if ((this.$route.meta as UserRouteMeta).hasSearch) {
-        this.examList = this.examList.filter(exam =>
-          exam.examName.match(new RegExp(this.searchValue, 'i'))
-        );
-      }
+      const searchFilteredExamList = (this.$route.meta as UserRouteMeta).hasSearch
+        ? doneFilteredExamList.filter(exam => {
+            if (this.isSearchDate) {
+              const requestDate = createUTCDate(exam.requestDate)!;
+              const searchDate = createUTCDate(this.searchValue ?? '');
 
-      return this.examList.sort((a, b) => {
-        const dateA = new Date(a.date);
-        const dateB = new Date(b.date);
+              if (!searchDate) {
+                return false;
+              }
+
+              return requestDate.getTime() == searchDate.getTime();
+            }
+
+            return !!exam.name.match(new RegExp(`^${this.searchValue ?? ''}`, 'i'));
+          })
+        : null;
+
+      const orderedAndFilteredExamList =
+        !isNil(searchFilteredExamList) && !isEmpty(searchFilteredExamList)
+          ? searchFilteredExamList
+          : doneFilteredExamList;
+
+      return orderedAndFilteredExamList.sort((a, b) => {
+        const dateA = new Date(a.requestDate);
+        const dateB = new Date(b.requestDate);
         switch (this.examSortOrder) {
           case 'asc':
             return dateA.getTime() - dateB.getTime();
@@ -112,28 +125,16 @@ export default defineComponent({
     },
   },
   methods: {
-    handleClickExam(exam: ExamListItem) {
-      if (exam.isPending) {
-        return;
-      }
-
+    handleClickExam(exam: ExamRequest) {
       this.$router.push({
-        name: 'user.exam.info',
+        name: exam.done ? 'user.exam.result' : 'user.exam.info',
         params: {
-          examId: '1',
+          examId: exam.id,
         },
       });
     },
-    formatDate(date: string | Date) {
-      if (typeof date == 'string') {
-        date = new Date(date);
-      }
-
-      return [
-        date.getDate().toString().padStart(2, '0'),
-        (date.getMonth() + 1).toString().padStart(2, '0'),
-        date.getFullYear(),
-      ].join('/');
+    formatDate(date: string) {
+      return formatDate(date);
     },
   },
   mounted() {
@@ -145,6 +146,7 @@ export default defineComponent({
           hasOptions: true,
         };
         this.title = 'Exames Pendentes';
+        this.searchValue = undefined;
       },
       search: () => {
         this.headerOptions = {
@@ -154,7 +156,7 @@ export default defineComponent({
             title: 'Procurar',
           },
         };
-        this.hasSearchBar = true;
+        this.searchValue = '';
         this.title = 'Exames Pendentes';
       },
       history: () => {
@@ -165,7 +167,7 @@ export default defineComponent({
             title: 'Histórico',
           },
         };
-        this.hasSearchBar = true;
+        this.searchValue = '';
         this.title = 'Exames Já Feitos';
       },
     };

@@ -3,57 +3,58 @@
     ref="label"
     for="inputFile"
     class="w-full rounded-xl border-2"
-    :class="{ 'border-dashed': !file }"
+    :class="{ 'border-dashed': !file.data }"
   >
     <div v-if="!file.data" class="flex flex-col items-center p-5">
       <div>
         <img src="@/assets/icons/upload.svg" alt="" />
       </div>
-      <span class="font-roboto font-bold text-our-grey-kinda-dark text-2xl"
-        >Adicione seu Exame</span
-      >
+      <span class="font-roboto font-bold text-our-grey-kinda-dark text-2xl">
+        Adicione seu Exame
+      </span>
     </div>
-    <div v-else class="flex flex-col items-center">
-      <div v-if="file.type == 'pdf'">
-        <canvas id="inputPreviewCanvas" class="rounded-xl rounded-b-none" />
-      </div>
-      <div v-else>
-        <img
-          id="inputPreviewImage"
-          class="rounded-xl rounded-b-none h-[100px]"
-          style="object-fit: cover"
-        />
-      </div>
-      <div
-        class="flex flex-row justify-start self-start items-center w-full border-t-2 px-5 py-3 bg-our-grey-very-light"
-      >
-        <img :src="`/src/assets/icons/${file.type}-48.png`" alt="" height="24" width="24" />
-        <span class="font-roboto font-semibold text-our-grey-kinda-dark text-ellipsis">{{
-          file.name
-        }}</span>
-      </div>
-    </div>
-    <input id="inputFile" type="file" class="hidden" accept="image/*,.pdf" @change="loadFile" />
+    <FilePreview v-else :file="file" />
+    <Field
+      id="inputFile"
+      :name="name"
+      type="file"
+      class="hidden"
+      accept="image/*,.pdf"
+      v-model="rawFile"
+    />
   </label>
 </template>
 
 <script lang="ts">
 import * as pdfjsLib from 'pdfjs-dist';
+import { Field } from 'vee-validate';
 import { defineComponent } from 'vue';
+import { FilePreview as FilePreviewType } from '../../types/input';
+import FilePreview from './FilePreview.vue';
 
 export default defineComponent({
+  components: {
+    Field,
+    FilePreview,
+  },
+  props: {
+    name: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       file: {
         type: '' as 'pdf' | 'image',
-        data: null as string | null,
+        data: undefined,
         name: '',
-      },
+      } as FilePreviewType,
+      rawFile: undefined as File | undefined,
     };
   },
   methods: {
-    loadFile(event: Event) {
-      // const [file] = (event.target as HTMLInputElement).files![0];
+    loadFile(file: File) {
       const reader = new FileReader();
       reader.onload = async () => {
         const result = reader.result as string;
@@ -67,7 +68,6 @@ export default defineComponent({
 
         if (this.file.type == 'image') {
           const image = document.getElementById('inputPreviewImage') as HTMLImageElement;
-          console.log(result);
           image.src = result;
           image.width = label.clientWidth;
           return;
@@ -88,7 +88,6 @@ export default defineComponent({
           viewport: pageViewport,
         });
       };
-      const file = (event.target as HTMLInputElement).files![0];
       this.file.name = file.name;
       reader.readAsDataURL(file);
     },
@@ -96,6 +95,14 @@ export default defineComponent({
   mounted() {
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       '../../../../node_modules/pdfjs-dist/build/pdf.worker.js';
+  },
+  watch: {
+    rawFile(newVal: File | undefined) {
+      if (!newVal) {
+        return;
+      }
+      this.loadFile(newVal);
+    },
   },
 });
 </script>

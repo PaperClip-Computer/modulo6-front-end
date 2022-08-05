@@ -19,16 +19,11 @@
         </div>
 
         <div class="flex flex-col gap-5">
-          <FilledButton
-            class="self-stretch"
-            text="Ver pacientes"
-            @click.prevent="handleButton('pacient')"
-          />
-          <FilledButton
-            class="self-stretch"
-            text="Ver exames"
-            @click.prevent="handleButton('exam')"
-          />
+          <Button class="self-stretch" @click.prevent="handleButton('pacient')">
+            Ver pacientes
+          </Button>
+
+          <Button class="self-stretch" @click.prevent="handleButton('exam')"> Ver exames </Button>
         </div>
       </div>
     </div>
@@ -37,11 +32,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import FilledButton from '../../components/buttons/FilledButton.vue';
+import Button from '../../components/buttons/Button.vue';
 
 export default defineComponent({
   components: {
-    FilledButton,
+    Button,
   },
   data() {
     return {
@@ -52,12 +47,11 @@ export default defineComponent({
     };
   },
   methods: {
-    handleButton(button: string) {
-      console.log(`Ver ${button}`);
+    handleButton(tab: string) {
       this.$router.push({
         name: 'doctor.search',
         query: {
-          button: button,
+          tab,
         },
       });
     },

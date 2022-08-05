@@ -1,8 +1,8 @@
 import { RouteRecordRaw } from 'vue-router';
 
+import UserExamResult from '@/pages/common/ExamResult.vue';
 import UserExamInfo from '@/pages/user/exam/Info.vue';
 import UserExamRegister from '@/pages/user/exam/Register.vue';
-import UserExamResult from '@/pages/user/exam/Result.vue';
 
 export default [
   {

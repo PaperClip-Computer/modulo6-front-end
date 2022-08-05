@@ -8,10 +8,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "chartjs-plugin-datalabels": "^2.1.0",
     "maska": "^1.5.0",
     "pdfjs-dist": "^2.15.349",
+    "vee-validate": "^4.6.2",
     "vue": "^3.2.25",
-    "vue-router": "^4.1.2"
+    "vue-autocomplete-input-tag": "^2.0.1",
+    "vue-chart-3": "^3.1.8",
+    "vue-inline-svg": "^3.1.0",
+    "vue-router": "^4.1.2",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@types/node": "^18.0.3",

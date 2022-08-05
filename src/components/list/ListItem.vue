@@ -1,8 +1,13 @@
 <template>
   <div class="flex flex-row justify-between items-center px-4 py-3 border-2 rounded-xl">
-    <span class="font-roboto font-medium text-xl text-our-grey-kinda-dark">
-      {{ text }}
-    </span>
+    <div class="flex flex-col items-start">
+      <span class="font-medium text-xl text-our-grey-kinda-dark">
+        {{ text }}
+      </span>
+      <span v-if="extraText" class="font-medium text-our-grey-kinda-dark-transparent">
+        {{ extraText }}
+      </span>
+    </div>
     <div>
       <img :src="`/src/assets/icons/${iconName}.svg`" alt="" />
     </div>
@@ -10,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: {
@@ -19,8 +24,7 @@ export default defineComponent({
       default: false,
     },
     extraText: {
-      type: Object as PropType<string | null>,
-      default: null,
+      type: String,
     },
     text: {
       type: String,

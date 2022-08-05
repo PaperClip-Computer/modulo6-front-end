@@ -1,13 +1,18 @@
 <template>
-  <div class="flex flex-row items-center justify-between bg-[#f5f5f5] p-4 gap-4 rounded-xl">
-    <input
-      :placeholder="placeholder"
-      v-model="value"
-      class="text-our-grey-kinda-dark w-full text-2xl font-medium bg-transparent outline-none"
-    />
-    <button>
-      <img src="@/assets/icons/search.svg" alt="" width="32" height="32" />
-    </button>
+  <div class="relative">
+    <div
+      class="flex flex-row items-center justify-between bg-our-grey-very-light p-4 gap-4 rounded-xl"
+    >
+      <input
+        :placeholder="placeholder"
+        v-model="value"
+        class="text-our-grey-kinda-dark w-full text-2xl font-medium bg-transparent outline-none"
+        v-maska="mask"
+      />
+      <button>
+        <img src="@/assets/icons/search.svg" alt="" width="32" height="32" />
+      </button>
+    </div>
   </div>
 </template>
 
@@ -24,14 +29,17 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    mask: {
+      type: String,
+    },
   },
   computed: {
     value: {
       get() {
         return this.modelValue;
       },
-      set(value: string) {
-        this.$emit('update:modelValue', value);
+      set(val: string) {
+        this.$emit('update:modelValue', val);
       },
     },
   },

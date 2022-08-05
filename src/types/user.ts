@@ -16,5 +16,5 @@ export interface ExamListItem {
 
 export interface UserRouteMeta {
   hasSearch?: boolean;
-  noPending?: boolean;
+  done?: boolean;
 }

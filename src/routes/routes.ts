@@ -1,7 +1,7 @@
 import { RouteRecordRaw } from 'vue-router';
 
-import userRoutes from './user';
 import doctorRoutes from './doctor';
+import userRoutes from './user';
 
 import BaseLayout from '@/layouts/Base.vue';
 

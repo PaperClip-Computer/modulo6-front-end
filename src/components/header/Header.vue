@@ -46,7 +46,7 @@ export default defineComponent({
       this.$router.back();
     },
     handleTabClicked(tab: TabData) {
-      const tabTitleToRoute: { [key in TabTitle]: string } = {
+      const tabTitleToRoute: Record<TabTitle, string> = {
         Gráfico: 'user.graph',
         Histórico: 'user.history',
         'Meu Doutor': 'user.doctor',

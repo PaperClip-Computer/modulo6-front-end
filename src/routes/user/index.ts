@@ -3,8 +3,8 @@ import { RouteRecordRaw } from 'vue-router';
 import userExamRoutes from './exam';
 
 import UserExamLayout from '@/layouts/Base.vue';
+import UserGraph from '@/pages/common/Graph.vue';
 import UserDoctor from '@/pages/user/Doctor.vue';
-import UserGraph from '@/pages/user/Graph.vue';
 import UserHome from '@/pages/user/Home.vue';
 import { UserRouteMeta } from '../../types/user';
 
@@ -28,7 +28,7 @@ export default [
     name: 'user.history',
     meta: {
       hasSearch: true,
-      noPending: true,
+      done: true,
     } as UserRouteMeta,
   },
   {
