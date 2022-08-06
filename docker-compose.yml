@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+    app:
+        image: node:lts
+        working_dir: /node/app
+        entrypoint: ./entrypoint.sh
+        command: tail -f /dev/null
+        volumes:
+            - ./:/node/app
+        ports:
+            - 3001:3000
