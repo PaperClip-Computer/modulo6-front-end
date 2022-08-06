@@ -8,13 +8,21 @@
 
 # Tabela de conteúdos
 
-- [Sobre o projeto](#-sobre-o-projeto)
-- [Como executar o projeto](#-como-executar-o-projeto)
-  - [Pré-requisitos](#pré-requisitos)
-  - [Rodando o projeto](#-rodando-o-projeto)
-- [Tecnologias](#-tecnologias)
-- [Autor](#-autor)
-- [Licença](#-licença)
+- [Tabela de conteúdos](#tabela-de-conteúdos)
+  - [💻 Sobre o projeto](#-sobre-o-projeto)
+  - [🚀 Como executar o projeto](#-como-executar-o-projeto)
+    - [1º Método: DevContainer](#1º-método-devcontainer)
+      - [⚙️ Pré Requisitos](#️-pré-requisitos)
+      - [🎲 Rodando o projeto](#-rodando-o-projeto)
+    - [2º Método: Docker](#2º-método-docker)
+      - [⚙️ Pré Requisitos](#️-pré-requisitos-1)
+      - [🎲 Rodando o projeto](#-rodando-o-projeto-1)
+    - [3º Método: Npm](#3º-método-npm)
+      - [⚙️ Pré Requisitos](#️-pré-requisitos-2)
+      - [🎲 Rodando o projeto](#-rodando-o-projeto-2)
+  - [🛠 Tecnologias](#-tecnologias)
+  - [🦸🤌 Autores](#-autores)
+  - [📝 Licença](#-licença)
 
 ## 💻 Sobre o projeto
 
@@ -25,29 +33,55 @@ médicos especializados em endocrinologia.
 
 ## 🚀 Como executar o projeto
 
-### Pré-requisitos
+Utilizando qualquer um dos métodos abaixo, a aplicação irá rodar na porta 3000.
 
-- [Git](https://git-scm.com/downloads)
+### 1º Método: DevContainer
+
+#### ⚙️ Pré Requisitos
+
+- Visual Studio Code
+- Extensão Remote Containers para o Visual Studio Code
+- Docker / Docker Compose
 
 #### 🎲 Rodando o projeto
 
-```bash
-# TODO
-```
+Como o vscode estará gerenciando o container da aplicação. Basta rodar o comando    
+```npm run dev``` e a aplicação irá rodar.
+
+### 2º Método: Docker
+
+#### ⚙️ Pré Requisitos
+
+- Docker / Docker Compose
+
+#### 🎲 Rodando o projeto
+
+Para subir o container basta rodar o comando ```docker-compose up```, talvez seja necessário rodar ```chmod +x ./entrypoint.sh``` para que o docker seja capaz de executar o script. Uma vez com o container de pé, assim como no anterior rode o comando ```npm run dev``` dentro do container
+
+### 3º Método: Npm
+
+#### ⚙️ Pré Requisitos
+
+- Node
+- Npm
+
+#### 🎲 Rodando o projeto
+
+Para baixar as dependências do projeto, rode o comando ```npm i``` e inicie a aplicação com o comando ```npm run dev```
 
 ---
 
 ## 🛠 Tecnologias
 
-TODO
-
-- React Native
+- Vue 3
+- Typescript
 - Tailwind CSS
-- SCSS
+- Docker
+- Visual Studio Code
 
 ---
 
-## 🦸 Autors
+## 🦸🤌 Autores
 
 <div style="display: flex; justify-content: space-around;">
 <div style="display: inline">
