@@ -9,4 +9,4 @@ services:
         volumes:
             - ./:/node/app
         ports:
-            - 3001:3000
+            - 3000:3000
