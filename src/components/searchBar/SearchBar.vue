@@ -8,6 +8,7 @@
         v-model="value"
         class="text-our-grey-kinda-dark w-full text-2xl font-medium bg-transparent outline-none"
         v-maska="mask"
+        :disabled="disabled"
       />
       <button>
         <img src="@/assets/icons/search.svg" alt="" width="32" height="32" />
@@ -31,6 +32,10 @@ export default defineComponent({
     },
     mask: {
       type: String,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {

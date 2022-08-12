@@ -3,7 +3,7 @@
     class="bg-our-grey-very-light flex flex-col items-center justify-center rounded-lg outline outline-1 outline-our-grey-medium-medium"
     v-if="selectedSelector"
   >
-    <SearchBar v-model="value" :placeholder="selectedSelector.placeholder" />
+    <SearchBar v-model="value" :placeholder="selectedSelector.placeholder" class="self-stretch" />
     <div class="flex flex-row gap-5">
       <UnderlineButton
         v-for="(selector, i) in selectors"

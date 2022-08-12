@@ -1,28 +1,28 @@
 <template>
-  <Header />
-  <div class="flex flex-col self-strech p-5">
-    <SearchBarWithSelector
-      v-model="innerSearchValue"
-      v-model:selected="tab"
-      :selectors="tabs"
-      :autoCompleteValues="dataList"
-    />
-  </div>
-  <div class="flex flex-col px-5 py-2" v-for="dataItem in filteredSelectedDataList">
-    <ListItem
-      :text="dataItem.text"
-      :extraText="dataItem.extraText"
-      @click.prevent="handleListItem(dataItem)"
-    />
+  <div v-if="ready">
+    <Header />
+    <div class="flex flex-col self-strech p-5">
+      <SearchBarWithSelector v-model="innerSearchValue" v-model:selected="tab" :selectors="tabs" />
+    </div>
+    <div class="flex flex-col px-5 py-2" v-for="dataItem in filteredSelectedDataList">
+      <ListItem
+        :text="dataItem.text"
+        :extraText="dataItem.extraText"
+        @click.prevent="handleListItem(dataItem)"
+      />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { isEmpty } from 'lodash';
 import { defineComponent } from 'vue';
+import api from '../../api';
 import Header from '../../components/header/Header.vue';
 import ListItem from '../../components/list/ListItem.vue';
 import SearchBarWithSelector from '../../components/searchBar/SearchBarWithSelector.vue';
+import { Doctor } from '../../types/api/doctor';
+import { Exam } from '../../types/api/exam';
 import { Selector } from '../../types/searchBar';
 
 type Tab = 'pacient' | 'exam';
@@ -30,7 +30,7 @@ type Tab = 'pacient' | 'exam';
 type CustomSelector = Omit<Selector, 'value'> & { value: Tab };
 
 interface DataItem {
-  id: number;
+  id?: number;
   text: string;
   extraText?: string;
 }
@@ -49,38 +49,9 @@ export default defineComponent({
   },
   data() {
     return {
-      dataList: {
-        exam: [
-          {
-            id: 0,
-            text: 'Tirogublina',
-          },
-          {
-            id: 1,
-            text: 'T3',
-          },
-          {
-            id: 2,
-            text: 'T4',
-          },
-          {
-            id: 3,
-            text: 'Colesterol',
-          },
-        ],
-        pacient: [
-          {
-            id: 0,
-            text: 'Jorge',
-            extraText: '000.000.000-00',
-          },
-          {
-            id: 1,
-            text: 'Carlos',
-            extraText: '111.111.111-11',
-          },
-        ],
-      } as Record<Tab, DataItem[]>,
+      ready: false,
+      doctor: {} as Doctor,
+      exams: [] as Exam[],
       tab: '' as Tab,
       tabs: [
         {
@@ -111,7 +82,7 @@ export default defineComponent({
       return this.dataList[this.tab] ?? [];
     },
     filteredSelectedDataList() {
-      const filteredSelectedDataList = this.selectedDataList.filter(item => {
+      const filteredSelectedDataList = this.selectedDataList.filter((item: DataItem) => {
         const text = this.tab == 'pacient' && this.isSearchCpf ? item.extraText! : item.text;
         return !!text.match(new RegExp(`^${this.innerSearchValue}`, 'i'));
       });
@@ -121,6 +92,22 @@ export default defineComponent({
     isSearchCpf() {
       const cpfRegex = /\d{3}\.\d{3}\.\d{3}-\d{2}/;
       return !!this.innerSearchValue.match(cpfRegex);
+    },
+    doctorPacients() {
+      return this.doctor.pacients;
+    },
+    dataList() {
+      return {
+        exam: this.exams.map(exam => ({
+          id: exam.id,
+          text: exam.name,
+        })),
+        pacient: this.doctorPacients.map(pacient => ({
+          id: pacient.id,
+          text: pacient.name,
+          extraText: pacient.cpf,
+        })),
+      } as Record<Tab, DataItem[]>;
     },
   },
   methods: {
@@ -133,7 +120,7 @@ export default defineComponent({
           this.$router.push({
             name: 'doctor.exam.info',
             params: {
-              examId: dataItem.id,
+              examId: dataItem.text,
             },
           });
           return;
@@ -147,10 +134,33 @@ export default defineComponent({
           return;
       }
     },
+    async fetchDoctor() {
+      try {
+        const { doctorId } = this.$route.params;
+        this.doctor = (await api.doctor.get(Number(doctorId as string))).data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async fetchExams() {
+      try {
+        this.exams = (await api.exam.exam.list()).data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async fetchData() {
+      await this.fetchDoctor();
+      await this.fetchExams();
+    },
   },
   mounted() {
     const queryTab = this.$route.query.tab as string;
     this.tab = this.isTab(queryTab) ? queryTab : 'pacient';
+
+    this.fetchData().then(() => {
+      this.ready = true;
+    });
   },
 });
 </script>

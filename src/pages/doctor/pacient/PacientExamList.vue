@@ -6,26 +6,29 @@
     v-model:searchValue="searchValue"
     class="max-h-screen overflow-hidden"
     innerClass="overflow-y-auto"
+    v-if="ready"
   >
     <div
-      v-for="(examItem, i) in orderedAndFilteredExamList"
+      v-for="(examSolicitation, i) in orderedAndFilteredExamList"
       :key="i"
       class="px-3 py-2 flex flex-col"
     >
-      <button @click="handleClickExam(examItem)">
-        <ListItem :text="examItem.name" :isPending="!examItem.done" />
+      <button @click="handleClickExam(examSolicitation)">
+        <ListItem :text="examSolicitation.exam.name" :isPending="!examSolicitation.examResult" />
       </button>
-      <span class="ml-4">{{ formatDate(examItem.requestDate) }}</span>
+      <span class="ml-4">{{ formatDate(examSolicitation.requestDate) }}</span>
     </div>
   </Base>
 </template>
 
 <script lang="ts">
-import { isEmpty } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 import { defineComponent } from 'vue';
+import api from '../../../api';
 import ListItem from '../../../components/list/ListItem.vue';
-import { ExamRequest } from '../../../types/exam';
-import { ExamSortOrder, HeaderOptions } from '../../../types/user';
+import { ExamSolicitation } from '../../../types/api/exam';
+import { User } from '../../../types/api/user';
+import { ExamSortOrder, HeaderOptions, UserRouteMeta } from '../../../types/user';
 import { createUTCDate, formatDate } from '../../../utils/date';
 import Base from '../../common/Base.vue';
 
@@ -36,73 +39,47 @@ export default defineComponent({
   },
   data() {
     return {
-      examList: [
-        {
-          id: 0,
-          name: 'Tirogublina',
-          requestDate: '2022-05-10',
-          done: true,
-          unitMeasure: 'ng/dL',
-        },
-        {
-          id: 1,
-          name: 'T3',
-          requestDate: '2022-05-11',
-          done: true,
-          unitMeasure: 'ng/dL',
-        },
-        {
-          id: 2,
-          name: 'Tirogublina',
-          requestDate: '2022-05-20',
-          done: false,
-          unitMeasure: 'ng/dL',
-        },
-        {
-          id: 3,
-          name: 'T4',
-          requestDate: '2022-05-15',
-          done: false,
-          unitMeasure: 'ng/dL',
-        },
-        {
-          id: 4,
-          name: 'Colesterol',
-          requestDate: '2022-05-21',
-          done: false,
-          unitMeasure: 'ng/dL',
-        },
-      ] as ExamRequest[],
+      pacient: {} as User,
       examSortOrder: 'desc' as ExamSortOrder,
       searchValue: undefined as string | undefined,
       headerOptions: {
         hasGoBack: true,
       } as HeaderOptions,
+      ready: false,
     };
   },
   computed: {
     isSearchDate() {
       return !!this.searchValue?.match(/\d{2}\/\d{2}\/\d{4}/);
     },
+    examSolicitations() {
+      return this.pacient.examSolicitations;
+    },
     orderedAndFilteredExamList() {
-      const searchedExamList = this.examList.filter(exam => {
-        if (this.isSearchDate) {
-          const requestDate = createUTCDate(exam.requestDate)!;
-          const searchDate = createUTCDate(this.searchValue ?? '');
+      const searchFilteredExamList = (this.$route.meta as UserRouteMeta).hasSearch
+        ? this.examSolicitations.filter(exam => {
+            if (this.isSearchDate) {
+              const requestDate = new Date(exam.requestDate);
+              const searchDate = createUTCDate(this.searchValue ?? '');
+              console.log(requestDate, searchDate);
 
-          if (!searchDate) {
-            return false;
-          }
+              if (!searchDate) {
+                return false;
+              }
 
-          return requestDate.getTime() == searchDate.getTime();
-        }
+              return requestDate.toLocaleDateString() == searchDate.toLocaleDateString();
+            }
 
-        return !!exam.name.match(new RegExp(`^${this.searchValue ?? ''}`, 'i'));
-      });
+            return !!exam.exam.name.match(new RegExp(`^${this.searchValue ?? ''}`, 'i'));
+          })
+        : null;
 
-      const filteredExamList = !isEmpty(searchedExamList) ? searchedExamList : this.examList;
+      const orderedAndFilteredExamList =
+        !isNil(searchFilteredExamList) && (!isEmpty(searchFilteredExamList) || this.isSearchDate)
+          ? searchFilteredExamList
+          : this.examSolicitations;
 
-      return filteredExamList.sort((a, b) => {
+      return orderedAndFilteredExamList.sort((a, b) => {
         const dateA = new Date(a.requestDate);
         const dateB = new Date(b.requestDate);
         switch (this.examSortOrder) {
@@ -115,22 +92,40 @@ export default defineComponent({
     },
   },
   methods: {
-    handleClickExam(exam: ExamRequest) {
-      if (!exam.done) {
+    handleClickExam(examSolicitation: ExamSolicitation) {
+      if (!examSolicitation.examResult) {
         return;
       }
 
       this.$router.push({
-        name: 'user.exam.result',
+        name: 'doctor.pacient.exam.result',
         params: {
-          userId: 1,
-          examId: exam.id,
+          examId: examSolicitation.id,
         },
       });
     },
-    formatDate(date: string) {
-      return formatDate(date);
+    formatDate(dateString: string) {
+      const date = new Date(dateString);
+
+      return [
+        date.getDate().toString().padStart(2, '0'),
+        (date.getMonth() + 1).toString().padStart(2, '0'),
+        date.getFullYear(),
+      ].join('/');
     },
+    async fetchPacient() {
+      try {
+        const { id } = this.$route.params;
+        this.pacient = (await api.user.get(Number(id as string))).data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
+  mounted() {
+    this.fetchPacient().then(() => {
+      this.ready = true;
+    });
   },
 });
 </script>

@@ -16,7 +16,7 @@ import { Chart, ChartData, ChartOptions, registerables } from 'chart.js';
 import ChartDataLabels, { Context } from 'chartjs-plugin-datalabels';
 import { computed, defineComponent, PropType, ref } from 'vue';
 import { ExtractComponentData, LineChart } from 'vue-chart-3';
-import { ExamResult } from '../../types/exam';
+import { ExamResult, ExamSolicitation } from '../../types/api/exam';
 import { formatDate } from '../../utils/date';
 
 export default defineComponent({
@@ -25,7 +25,7 @@ export default defineComponent({
   },
   props: {
     exams: {
-      type: Array as PropType<ExamResult[]>,
+      type: Array as PropType<ExamSolicitation[]>,
       required: true,
     },
     modelValue: {
@@ -34,7 +34,11 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const exams = props.exams.sort((a, b) => {
+    const examResults = computed(() => {
+      return props.exams.filter(exam => exam.examResult).map(exam => exam.examResult!);
+    });
+
+    const examResultsSorted = examResults.value.sort((a, b) => {
       if (a.measureDate > b.measureDate) {
         return 1;
       }
@@ -48,7 +52,7 @@ export default defineComponent({
 
     Chart.register(...registerables, ChartDataLabels);
 
-    const selectedDataIndex = ref(exams.findIndex(exam => exam.id == props.modelValue));
+    const selectedDataIndex = ref(examResultsSorted.findIndex(exam => exam.id == props.modelValue));
     const isSelected = (context: Context) => context.dataIndex == selectedDataIndex.value;
 
     const lineChartRef = ref<ExtractComponentData<typeof LineChart>>();
@@ -87,7 +91,7 @@ export default defineComponent({
             },
             click: (context, _event) => {
               selectedDataIndex.value = context.dataIndex;
-              emit('update:modelValue', exams.at(selectedDataIndex.value)!.id);
+              emit('update:modelValue', examResultsSorted.at(selectedDataIndex.value)!.id);
               context.chart.update();
               document.body.style.cursor = 'pointer';
             },
@@ -114,9 +118,9 @@ export default defineComponent({
         },
       },
     });
-    const data = ref(exams.map(exam => exam.result));
+    const data = ref(examResults.value.map((exam: ExamResult) => Number(exam.result)));
     const lineChartData = computed<ChartData<'line'>>(() => ({
-      labels: exams.map(exam => formatDate(exam.measureDate)),
+      labels: examResults.value.map((exam: ExamResult) => formatDate(exam.measureDate)),
       datasets: [
         {
           data: data.value,
@@ -139,6 +143,7 @@ export default defineComponent({
       lineChartRef,
       lineChartOptions,
       lineChartData,
+      examResults,
     };
   },
   data() {

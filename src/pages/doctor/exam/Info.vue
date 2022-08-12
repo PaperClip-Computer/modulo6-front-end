@@ -1,12 +1,12 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col" v-if="ready">
     <Header :has-go-back="true" />
     <div class="flex flex-col p-3 border border-our-grey-medium-medium">
       <span class="text-our-grey-kinda-dark font-medium text-3xl">Nome do Exame</span>
     </div>
     <div class="p-5 flex flex-col gap-4">
-      <div v-for="info in infoList">
-        <PillItem :name="info.name" :value="info.value" :justify="info.name === 'Interpretação'" />
+      <div v-for="(value, name, i) in examInfo" :key="i">
+        <PillItem :name="name" :value="value" :justify="name === 'Interpretação'" />
       </div>
     </div>
     <div class="sticky bottom-4 flex">
@@ -17,14 +17,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import api from '../../../api';
 import Button from '../../../components/buttons/Button.vue';
 import Header from '../../../components/header/Header.vue';
 import PillItem from '../../../components/pillItem/PillItem.vue';
-
-interface ExamInfo {
-  name: string;
-  value?: string;
-}
+import { Exam, ExamInfoFields } from '../../../types/api/exam';
+import { infoFieldsTranslator } from '../../../utils/exam';
 
 export default defineComponent({
   components: {
@@ -33,32 +31,20 @@ export default defineComponent({
     Button,
   },
   data() {
-    const infoList: ExamInfo[] = [
-      {
-        name: 'Sinonímia',
-      },
-      {
-        name: 'Preparo do Paciente',
-        value: 'Jejum de 4 horas',
-      },
-      {
-        name: 'Material',
-        value: 'Soro. Volume mínimo: 1,0 mL',
-      },
-      {
-        name: 'Colheita / Conservação',
-        value: 'Se o exame não for realizado no mesmo dia, congelar a amostra',
-      },
-      { name: 'Método', value: 'Radioimunoensaio' },
-      { name: 'Valores Normais', value: '2 a 30 ngdL' },
-      {
-        name: 'Interpretação',
-        value:
-          'A tiroglobulina é uma glicoproteína produzida pelas células acinares tiroidianas sendo o principal componente do colóide dos folículos tiroidianos. Os seus níveis séricos variam com o estado funcional da tiróide, estando elevados nas tireoidites, carcinomas de tiróide, hipertiroidismo ou mesmo ap6s palpação vigorosa dessa glândula. Sua principal utilidade é no seguimento de carcinomas operados da tiróide, especialmente dos tipos papilífero, folicular e misto papilífero-folicutar.',
-      },
-    ];
-
-    return { infoList };
+    return {
+      exam: {} as Exam,
+      ready: false,
+    };
+  },
+  computed: {
+    examInfo() {
+      return Object.entries(infoFieldsTranslator).reduce((acc, [key, value]) => {
+        return {
+          ...acc,
+          [value]: this.exam[key as ExamInfoFields] ?? '-',
+        };
+      }, {} as Record<string, string>);
+    },
   },
   methods: {
     handleOrderExam() {
@@ -67,6 +53,20 @@ export default defineComponent({
         name: 'doctor.exam.info.order',
       });
     },
+    async fetchExam() {
+      try {
+        const { examId } = this.$route.params;
+        this.exam = (await api.exam.exam.get(examId as string)).data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
+  mounted() {
+    this.fetchExam().then(() => {
+      this.ready = true;
+      console.log(this.exam);
+    });
   },
 });
 </script>

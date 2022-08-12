@@ -1,5 +1,6 @@
 export function formatDate(dateString: string) {
-  const date = createUTCDate(dateString);
+  dateString = dateString.replaceAll('Z', '');
+  const date = new Date(dateString);
 
   if (!date) {
     return undefined;

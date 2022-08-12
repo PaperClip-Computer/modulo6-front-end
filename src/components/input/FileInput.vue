@@ -42,12 +42,16 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    modelValue: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
       file: {
         type: '' as 'pdf' | 'image',
-        data: undefined,
+        data: '',
         name: '',
       } as FilePreviewType,
       rawFile: undefined as File | undefined,
@@ -61,6 +65,8 @@ export default defineComponent({
 
         this.file.type = result.startsWith('data:application/pdf') ? 'pdf' : 'image';
         this.file.data = result;
+
+        this.$emit('update:modelValue', result);
 
         await this.$nextTick();
 

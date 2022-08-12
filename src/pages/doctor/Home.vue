@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-our-red-light flex flex-col items-center grow h-full">
+  <div v-if="ready" class="bg-our-red-light flex flex-col items-center grow h-full">
     <div class="flex items-center justify-center p-8 self-stretch">
       <span class="text-white font-bold text-5xl">FitSys</span>
     </div>
@@ -14,7 +14,7 @@
           </div>
           <div class="flex flex-col gap-2 text-our-red-light text-center text-5xl font-semibold">
             <span> Bem vindo(a), </span>
-            <span> Dr(a). {{ doctor.lastname }} </span>
+            <span> Dr(a). {{ doctor.name.split(' ').at(-1) }} </span>
           </div>
         </div>
 
@@ -32,7 +32,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import api from '../../api';
 import Button from '../../components/buttons/Button.vue';
+import { Doctor } from '../../types/api/doctor';
 
 export default defineComponent({
   components: {
@@ -40,13 +42,19 @@ export default defineComponent({
   },
   data() {
     return {
-      doctor: {
-        firstname: 'André',
-        lastname: 'Melo',
-      },
+      doctor: {} as Doctor,
+      ready: false,
     };
   },
   methods: {
+    async fetchDoctor() {
+      try {
+        const { doctorId } = this.$route.params;
+        this.doctor = (await api.doctor.get(Number(doctorId as string))).data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
     handleButton(tab: string) {
       this.$router.push({
         name: 'doctor.search',
@@ -55,6 +63,11 @@ export default defineComponent({
         },
       });
     },
+  },
+  mounted() {
+    this.fetchDoctor().then(() => {
+      this.ready = true;
+    });
   },
 });
 </script>
